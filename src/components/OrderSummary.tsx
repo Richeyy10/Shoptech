@@ -4,13 +4,6 @@ import { Address } from "@/assets/types";
 import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 
-interface Address {
-    fullName: string;
-    area: string;
-    city: string;
-    state: string;
-}
-
 export default function OrderSummary() {
     const { currency, router, getCartCount, getCartAmount } = useAppContext()
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
