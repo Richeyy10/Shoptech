@@ -34,7 +34,7 @@ const NavLink = ({ href, children }: NavLinkProps) => {
 
 export default function Navbar() {
     const { isSeller, router, user } = useAppContext();
-    // const { openSignIn } = useClerk();
+    const { openSignIn } = useClerk();
 
     return (
         <>
@@ -60,9 +60,8 @@ export default function Navbar() {
 
                 <ThemeSwitch />
 
-                {/* {isSeller && <button onClick={() => router.push('/seller')} className="text-xs border px-4 py-1.5 rounded-full">Seller Dashboard</button>} */}
 
-                {/* <ul className="hidden md:flex items-center gap-4 ">
+                <ul className="hidden md:flex items-center gap-4 ">
                     <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                     {user 
                         ? <>   
@@ -79,8 +78,8 @@ export default function Navbar() {
                         <Image src={assets.user_icon} alt="user icon" />
                         Account
                     </button>}
-                </ul> */}
-{/* 
+                </ul>
+                
                 <div className="flex items-center md:hidden gap-3">
                     {isSeller && <button onClick={() => router.push('/seller')} className="text-xs border px-4 py-1.5 rounded-full">Seller Dashboard</button>}
                     {user 
@@ -107,7 +106,7 @@ export default function Navbar() {
                         <Image src={assets.user_icon} alt="user icon" />
                         Account
                     </button>}
-                </div> */}
+                </div> 
             </nav>
         </>
     )
