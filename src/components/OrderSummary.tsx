@@ -4,9 +4,16 @@ import { Address } from "@/assets/types";
 import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 
+interface Address {
+    fullName: string;
+    area: string;
+    city: string;
+    state: string;
+}
+
 export default function OrderSummary() {
     const { currency, router, getCartCount, getCartAmount } = useAppContext()
-    const [selectedAddress, setSelectedAddress] = useState <Address[]>([]);
+    const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const [userAddresses, setUserAddresses] = useState <Address[]>([]);
@@ -15,7 +22,7 @@ export default function OrderSummary() {
         setUserAddresses(addressDummyData);
     }
 
-    const handleAddressSelect = (address:any) => {
+    const handleAddressSelect = (address: Address) => {
         setSelectedAddress(address);
         setIsDropdownOpen(false);
     };
