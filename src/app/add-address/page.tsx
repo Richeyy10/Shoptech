@@ -5,7 +5,7 @@ import Image from "next/image";
 import Footer from "@/components/footer";
 import { assets } from "@/assets/assets";
 
-export default function addAddress() {
+export default function AddAddress() {
     const [address, setAddress] = useState({
         fullName: '',
         phoneNumber: '',
