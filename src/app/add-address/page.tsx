@@ -18,7 +18,8 @@ export default function addAddress() {
         e.preventDefault();
 
     }
-    <>
+    return (
+        <>
             <Navbar />
             <div className="px-6 md:px-16 lg:px-32 py-16 flex flex-col md:flex-row justify-between">
                 <form onSubmit={onSubmitHandler} className="w-full">
@@ -84,4 +85,5 @@ export default function addAddress() {
             </div>
             <Footer />
         </>
+    )
 }
