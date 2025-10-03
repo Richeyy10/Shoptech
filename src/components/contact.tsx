@@ -74,7 +74,7 @@ export default function ContactPage() {
             Get In Touch
           </h1>
           <p className="mt-3 text-xl text-gray-400 max-w-3xl mx-auto">
-            We're here to help with orders, tech support, and partnership inquiries.
+            We'&apos;re here to help with orders, tech support, and partnership inquiries.
           </p>
         </div>
 
