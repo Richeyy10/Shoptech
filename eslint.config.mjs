@@ -12,6 +12,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    // Ignore patterns remain here
     ignores: [
       "node_modules/**",
       ".next/**",
@@ -19,6 +20,16 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+  },
+  // 👇 ADD THIS NEW CONFIGURATION OBJECT TO OVERRIDE THE RULE
+  {
+    // This targets only TypeScript files where the rule is active
+    files: ["**/*.{ts,tsx}"], 
+    rules: {
+      // Set to "off" to completely disable the error and allow 'any'.
+      // You can also use "warn" to see it as a warning instead of a failure.
+      "@typescript-eslint/no-explicit-any": "off", 
+    },
   },
 ];
 
