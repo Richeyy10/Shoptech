@@ -96,6 +96,7 @@ export default function Navbar() {
                 
                 {/* --- Mobile User/Account Section --- */}
                 <div className="flex items-center md:hidden gap-3">
+                    <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                     {isSignedIn 
                         ? (
                             // ✅ User is Signed In: Show the UserButton (for mobile menu)
@@ -112,7 +113,6 @@ export default function Navbar() {
                         ) 
                         : (
                             // ✅ User is Signed Out: Show the Sign In Button
-                            <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                             <button 
                                 onClick={() => openSignIn()} // ⬅️ Correctly calls the function
                                 className="flex items-center gap-2 hover:text-gray-900 transition"
