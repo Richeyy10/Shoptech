@@ -65,10 +65,10 @@ export default function Navbar() {
                     </NavLink>
                 </div>
 
-                <ThemeSwitch />
 
                 {/* --- Desktop User/Account Section --- */}
                 <ul className="hidden md:flex items-center gap-4 ">
+                    <ThemeSwitch />
                     <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                     {isSignedIn 
                         ? (
@@ -96,6 +96,7 @@ export default function Navbar() {
                 
                 {/* --- Mobile User/Account Section --- */}
                 <div className="flex items-center md:hidden gap-3">
+                    <ThemeSwitch />
                     <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
                     {isSignedIn 
                         ? (
