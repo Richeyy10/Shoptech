@@ -33,16 +33,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <SignedOut>
-          <SignIn routing="hash"></SignIn>
-        </SignedOut>
-        <SignedIn>
         <Providers>
           <AppContextProvider>
             {children}
           </AppContextProvider>
           </Providers>
-        </SignedIn>
       </body>
     </html>
   </ClerkProvider>
