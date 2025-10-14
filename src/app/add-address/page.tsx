@@ -9,8 +9,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function addAddress() {
-    const {getToken, router} = useAppContext()
-
+    const { getToken, router} = useAppContext();
     const [address, setAddress] = useState({
         fullName: '',
         phoneNumber: '',

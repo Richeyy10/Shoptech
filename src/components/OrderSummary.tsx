@@ -7,8 +7,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function OrderSummary() {
-    const { currency, router, getCartCount, getCartAmount, getToken, user, cartItems, setCartItems } = useAppContext()
-    const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined);
+    const { currency, router, getCartCount, getCartAmount, getToken, user } = useAppContext()
+    const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined); 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const [userAddresses, setUserAddresses] = useState<Address[]>([]);
@@ -30,7 +30,7 @@ export default function OrderSummary() {
         }
     }
 
-    const handleAddressSelect = (address: any) => {
+    const handleAddressSelect = (address:any) => {
         setSelectedAddress(address);
         setIsDropdownOpen(false);
     };
