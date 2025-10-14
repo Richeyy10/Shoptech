@@ -8,7 +8,7 @@ import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default function addAddress() {
+export default function AddAddress() {
     const { getToken, router} = useAppContext();
     const [address, setAddress] = useState({
         fullName: '',
