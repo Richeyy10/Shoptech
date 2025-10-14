@@ -4,6 +4,7 @@ import Image from "next/image";
 import {assets} from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 import OrderSummary from "@/components/OrderSummary";
+import { Product } from "@/assets/types";
 
 export default function Cart() {
     const { products, router, cartItems, addToCart, updateCartQuantity, getCartCount } = useAppContext();
@@ -38,7 +39,7 @@ export default function Cart() {
                     </thead>
                     <tbody>
                         {Object.keys(cartItems).map((itemId) => {
-                        const product = products.find((product:any) => product._id === itemId);
+                        const product = products.find((product: Product) => product._id === itemId);
 
                         if (!product || cartItems[itemId] <= 0) return null;
 

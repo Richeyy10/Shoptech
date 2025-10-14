@@ -41,7 +41,7 @@ export default function HeaderSlider() {
         return () => clearInterval(interval);
       }, [sliderData.length]);
 
-      const handleSlideChange = (index:any) => {
+      const handleSlideChange = (index:number) => {
         setCurrentSlide(index);
       };
 

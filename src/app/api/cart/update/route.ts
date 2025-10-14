@@ -1,9 +1,9 @@
 import connectDB from "@/config/db";
 import { getAuth } from "@clerk/nextjs/server";
 import User from "../../../../../models/user";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request:any) {
+export async function POST(request:NextRequest) {
     try {
         const {userId} = getAuth(request)
         const { cartData} = await request.json()
@@ -13,7 +13,9 @@ export async function POST(request:any) {
         await user.save()
 
         return NextResponse.json({success: true})
-    } catch (error:any) {
-        return NextResponse.json({success: false, message: error.message})
+    } catch (error:unknown) {
+        console.error("API Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown internal server error occurred";
+        return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
     }
 }

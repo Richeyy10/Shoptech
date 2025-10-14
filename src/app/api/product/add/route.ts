@@ -2,8 +2,13 @@ import authSeller from "@/app/lib/authseller";
 import connectDB from "@/config/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary"; 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Product from "../../../../../models/product";
+
+interface CloudinaryUploadResult {
+    secure_url: string;
+    [key: string]: any; // Allows for additional, unused properties
+}
 
 // Configure cloudinary 
 cloudinary.config({
@@ -12,7 +17,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-export async function POST (request:any) {
+export async function POST (request:NextRequest) {
     try {
         const {userId} = getAuth(request)
         const isSeller = await authSeller(userId)
@@ -33,17 +38,25 @@ export async function POST (request:any) {
             return NextResponse.json({success: false, message: 'no files uploaded'})
         }
 
-        const result = await Promise.all(
-            files.map(async (files:any) => {
+        const imageFiles: File[] = files.filter((entry): entry is File => 
+            typeof entry !== 'string'
+        );
+        
+        if (imageFiles.length === 0) {
+            return NextResponse.json({success: false, message: 'no valid image files uploaded'}, {status: 400})
+        }
+
+        const result:  CloudinaryUploadResult[] = await Promise.all(
+            imageFiles.map(async (files: File) => {
                 const arrayBuffer = await files.arrayBuffer()
                 const buffer = Buffer.from(arrayBuffer)
 
-                return new Promise((resolve, reject)=> {
+                return new Promise<CloudinaryUploadResult>((resolve, reject)=> {
                     const stream = cloudinary.uploader.upload_stream(
                         {resource_type: 'auto'},
-                        (error:any, result:any) => {
-                            if (error) {
-                                reject(error)
+                        (error: Error | undefined, result: CloudinaryUploadResult | undefined) => {
+                            if (error || !result) {
+                                reject(error || new Error("Cloudinary upload failed: result missing."))
                             } else {
                                 resolve(result)
                             }
@@ -69,112 +82,9 @@ export async function POST (request:any) {
 
         return NextResponse.json({ success: true, message: 'Upload successful', newProduct })
 
-    } catch (error:any) {
-        return NextResponse.json({success: false, message: error.message})
+    } catch (error:unknown) {
+        console.error("API Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown internal server error occurred";
+        return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
     }
 }
-
-// import authSeller from "@/app/lib/authseller";
-// import connectDB from "@/config/db";
-// import { getAuth } from "@clerk/nextjs/server";
-// import { v2 as cloudinary } from "cloudinary"; 
-// import { NextResponse } from "next/server";
-// import Product from "../../../../../models/product"; // Ensure this path is correct
-
-// // Configure cloudinary 
-// cloudinary.config({
-//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//     api_key: process.env.CLOUDINARY_API_KEY,
-//     api_secret: process.env.CLOUDINARY_API_SECRET
-// })
-
-// export async function POST (request:any) {
-//     try {
-//         const {userId} = getAuth(request)
-        
-//         // 🚨 TEMPORARY FIX: BYPASSING SELLER AUTHORIZATION 🚨
-//         // This is done because your user database is currently empty, 
-//         // causing authSeller to fail and return a 403.
-//         // const isSeller = await authSeller(userId)
-//         // if (!isSeller) {
-//         //     return NextResponse.json({success: false, message: 'not authorized'}, { status: 403 })
-//         // }
-        
-//         // The rest of the logic proceeds without checking the 'seller' role for now.
-
-//         const formData = await request.formData()
-//         const name = formData.get('name');
-//         const description = formData.get('description');
-//         const category = formData.get('category');
-//         const price = formData.get('price');
-//         const offerPrice = formData.get('offerPrice');
-//         const files = formData.getAll('images');
-
-//         // Filter out null values to prevent issues with Cloudinary/FormData
-//         const nonNullFiles = files.filter((file: File): file is File => file instanceof File);
-
-//         if (nonNullFiles.length === 0) {
-//             return NextResponse.json({success: false, message: 'No valid image files uploaded'}, { status: 400 })
-//         }
-
-//         // --- Cloudinary Upload Logic ---
-//         const result = await Promise.all(
-//             nonNullFiles.map(async (file: File) => {
-//                 const arrayBuffer = await file.arrayBuffer()
-//                 const buffer = Buffer.from(arrayBuffer)
-
-//                 return new Promise((resolve, reject)=> {
-//                     const stream = cloudinary.uploader.upload_stream(
-//                         {resource_type: 'auto'},
-//                         (error:any, result:any) => {
-//                             if (error) {
-//                                 reject(error)
-//                             } else {
-//                                 resolve(result)
-//                             }
-//                         }
-//                     )
-//                     stream.end(buffer)
-//                 })
-//             })
-//         )
-//         // --- End Cloudinary Upload Logic ---
-
-//         const image = result.map((res: any) => res.secure_url)
-        
-//         await connectDB() // Use the robust cached connection function
-
-//         // --- Dedicated Database Save and Error Catching ---
-//         let newProduct;
-//         try {
-//             newProduct = await Product.create({
-//                 userId, // This is still your Clerk user ID
-//                 name,
-//                 description,
-//                 category,
-//                 price:Number(price),
-//                 offerPrice:Number(offerPrice),
-//                 image,
-//                 date: Date.now()
-//             })
-
-//         } catch (dbError: any) {
-//             // CRITICAL: Catches Mongoose validation/connection errors
-//             console.error("DATABASE SAVE FAILED:", dbError.message);
-            
-//             // Return a 500 status on database failure
-//             return NextResponse.json(
-//                 { success: false, message: `Database save failed: ${dbError.message}` }, 
-//                 { status: 500 }
-//             );
-//         }
-
-//         // Return success only if database save was successful
-//         return NextResponse.json({ success: true, message: 'Upload successful', newProduct }, { status: 200 })
-
-//     } catch (error:any) {
-//         // General catch for authentication, Cloudinary config, or other unexpected errors
-//         console.error("API Route General Error:", error);
-//         return NextResponse.json({success: false, message: `An unexpected error occurred: ${error.message}`}, { status: 500 })
-//     }
-// }

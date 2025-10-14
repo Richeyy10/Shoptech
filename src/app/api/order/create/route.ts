@@ -1,10 +1,10 @@
 import { getAuth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Product from "../../../../../models/product";
 import { inngest } from "@/config/inngest";
 import User from "../../../../../models/user";
 
-export async function POST(request:any) {
+export async function POST(request:NextRequest) {
     try {
         const {userId} = getAuth(request)
         const {address, items } = await request.json()
@@ -37,7 +37,9 @@ export async function POST(request:any) {
         await user.save()
 
         return NextResponse.json({success: true, message: 'Order Placed'})
-    } catch (error:any) {
-        return NextResponse.json({success: false, message: error.message})
+    } catch (error:unknown) {
+        console.error("API Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown internal server error occurred";
+        return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
     }
 }

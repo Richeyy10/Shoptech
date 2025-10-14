@@ -9,6 +9,7 @@ import { Product } from '@/assets/types';
 import { useParams } from "next/navigation";
 import { useAppContext } from "@/context/AppContext";
 import Loading from "@/components/Loading";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function Products () {
 
@@ -16,7 +17,7 @@ export default function Products () {
 
     const { products, router, addToCart } = useAppContext() as {
         products: Product[];
-        router: any;
+        router: AppRouterInstance;
         addToCart: (id: string) => void; 
     }
 
