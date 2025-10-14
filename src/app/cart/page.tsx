@@ -16,22 +16,22 @@ export default function Cart() {
                     <p className="text-2xl md:text-3xl text-gray-500">
                     Your <span className="font-medium text-orange-600">Cart</span>
                     </p>
-                    <p className="text-lg md:text-xl text-gray-500/80">{getCartCount()} Items</p>
+                    <p className="text-lg md:text-xl text-gray-500/80 dark:text-white">{getCartCount()} Items</p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full table-auto">
                     <thead className="text-left">
                         <tr>
-                        <th className="text-nowrap pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                        <th className="text-nowrap pb-6 md:px-4 px-1 text-gray-600 dark:text-white font-medium">
                             Product Details
                         </th>
-                        <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                        <th className="pb-6 md:px-4 px-1 text-gray-600 dark:text-white font-medium">
                             Price
                         </th>
-                        <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                        <th className="pb-6 md:px-4 px-1 text-gray-600 dark:text-white font-medium">
                             Quantity
                         </th>
-                        <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                        <th className="pb-6 md:px-4 px-1 text-gray-600 dark:text-white font-medium">
                             Subtotal
                         </th>
                         </tr>
@@ -46,7 +46,7 @@ export default function Cart() {
                             <tr key={itemId}>
                             <td className="flex items-center gap-4 py-4 md:px-4 px-1">
                                 <div>
-                                <div className="rounded-lg overflow-hidden bg-gray-500/10 p-2">
+                                <div className="rounded-lg overflow-hidden bg-gray-500/10 dark:bg-white p-2">
                                     <Image
                                     src={product.image[0]}
                                     alt={product.name}
@@ -63,7 +63,7 @@ export default function Cart() {
                                 </button>
                                 </div>
                                 <div className="text-sm hidden md:block">
-                                <p className="text-gray-800">{product.name}</p>
+                                <p className="text-gray-800 dark:text-white">{product.name}</p>
                                 <button
                                     className="text-xs text-orange-600 mt-1"
                                     onClick={() => updateCartQuantity(product._id, 0)}
@@ -72,7 +72,7 @@ export default function Cart() {
                                 </button>
                                 </div>
                             </td>
-                            <td className="py-4 md:px-4 px-1 text-gray-600">${product.offerPrice}</td>
+                            <td className="py-4 md:px-4 px-1 text-gray-600 dark:text-white">${product.offerPrice}</td>
                             <td className="py-4 md:px-4 px-1">
                                 <div className="flex items-center md:gap-2 gap-1">
                                 <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
@@ -92,7 +92,7 @@ export default function Cart() {
                                 </button>
                                 </div>
                             </td>
-                            <td className="py-4 md:px-4 px-1 text-gray-600">${(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
+                            <td className="py-4 md:px-4 px-1 text-gray-600 dark:text-white">${(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
                             </tr>
                         );
                         })}

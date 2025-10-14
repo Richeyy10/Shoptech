@@ -2,8 +2,14 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import Image from "next/image";
 import { assets } from "@/assets/assets";
+import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function AddProduct() {
+    const { getToken } = useAppContext()
+
+
     const [files, setFiles] = useState<(File | null)[]>([null, null, null, null]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -13,6 +19,38 @@ export default function AddProduct() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const formData = new FormData()
+
+        const nonNullFiles = files.filter((file): file is File => file !== null);
+
+        formData.append('name', name)
+        formData.append('description', description)
+        formData.append('category', category)
+        formData.append('price', price)
+        formData.append('offerPrice', offerPrice)
+
+        for (let i = 0; i < nonNullFiles.length; i++) {
+          formData.append('images',nonNullFiles[i]) 
+        }
+
+        try {
+          const token = await getToken()
+          const {data} = await axios.post('/api/product/add', formData, {headers: {Authorization: `Bearer ${token}`}})
+          if (data.success) {
+            toast.success(data.message)
+            setFiles([]);
+            setName('');
+            setDescription('');
+            setCategory('Earphone');
+            setPrice('');
+            setOfferPrice('');
+          } else {
+            toast.error(data.message);
+          }
+
+        } catch (error:any) {
+          toast.error(error.message)
+        }
 
     };
 
@@ -55,7 +93,7 @@ export default function AddProduct() {
             id="product-name"
             type="text"
             placeholder="Type here"
-            className="outline-none md:py-2.5 py-2 px-3 dark:text-black rounded border border-gray-500/40"
+            className="outline-none md:py-2.5 py-2 px-3 dark:text-white rounded border border-gray-500/40"
             onChange={(e) => setName(e.target.value)}
             value={name}
             required
@@ -71,7 +109,7 @@ export default function AddProduct() {
           <textarea
             id="product-description"
             rows={4}
-            className="outline-none md:py-2.5 py-2 px-3 dark:text-black rounded border border-gray-500/40 resize-none"
+            className="outline-none md:py-2.5 py-2 px-3 dark:text-white rounded border border-gray-500/40 resize-none"
             placeholder="Type here"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
@@ -85,7 +123,7 @@ export default function AddProduct() {
             </label>
             <select
               id="category"
-              className="outline-none md:py-2.5 py-2 px-3 dark:text-black rounded border border-gray-500/40"
+              className="outline-none md:py-2.5 py-2 px-3 dark:text-white rounded border border-gray-500/40"
               onChange={(e) => setCategory(e.target.value)}
               defaultValue={category}
             >
@@ -106,7 +144,7 @@ export default function AddProduct() {
               id="product-price"
               type="number"
               placeholder="0"
-              className="outline-none md:py-2.5 py-2 px-3 dark:text-black rounded border border-gray-500/40"
+              className="outline-none md:py-2.5 py-2 px-3 dark:text-white rounded border border-gray-500/40"
               onChange={(e) => setPrice(e.target.value)}
               value={price}
               required
@@ -120,7 +158,7 @@ export default function AddProduct() {
               id="offer-price"
               type="number"
               placeholder="0"
-              className="outline-none md:py-2.5 py-2 px-3 dark:text-black rounded border border-gray-500/40"
+              className="outline-none md:py-2.5 py-2 px-3 dark:text-white rounded border border-gray-500/40"
               onChange={(e) => setOfferPrice(e.target.value)}
               value={offerPrice}
               required
