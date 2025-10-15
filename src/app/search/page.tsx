@@ -48,7 +48,7 @@ export default function SearchPage() {
             <Navbar />
             <div className="px-6 md:px-16 lg:px-32 py-12 min-h-[60vh]">
                 <h1 className="text-3xl font-semibold mb-6 text-gray-800 dark:text-white">
-                    Search Results for: <span className="text-orange-600">"{query}"</span>
+                    Search Results for: <span className="text-orange-600">&quot;{query}&quot;</span>
                 </h1>
 
                 {isLoading ? (
@@ -61,7 +61,7 @@ export default function SearchPage() {
                     </div>
                 ) : (
                     <p className="text-lg text-red-500">
-                        No products found matching "{query}".
+                        No products found matching &quot;{query}&quot;.
                     </p>
                 )}
             </div>

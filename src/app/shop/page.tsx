@@ -62,7 +62,7 @@ export default function Shop() {
 
                 {displayedProducts.length === 0 && searchTerm.trim() !== '' ? (
                     <p className="text-lg text-red-500 mt-8 pb-14">
-                        No products found matching "{searchTerm}".
+                        No products found matching &quot;{searchTerm}&quot;.
                     </p>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 flex-col items-center gap-6 mt-6 pb-14 w-full">
