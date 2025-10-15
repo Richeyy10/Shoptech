@@ -7,7 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function OrderSummary() {
-    const { currency, router, getCartCount, getCartAmount, getToken, user } = useAppContext()
+    const { currency, router, cartItems, setCartItems, getCartCount, getCartAmount, getToken, user } = useAppContext()
     const [selectedAddress, setSelectedAddress] = useState<Address | undefined>(undefined); 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -36,7 +36,37 @@ export default function OrderSummary() {
     };
 
     const createOrder = async () => {
+        try {
+            if(!selectedAddress) {
+                return toast.error('Please select an address')
+            }
+            let cartItemsArray = Object.keys(cartItems).map((key) => ({product:key, quantity: cartItems[key]}))
+            cartItemsArray = cartItemsArray.filter(item => item.quantity > 0)
 
+            if(cartItemsArray.length === 0) {
+                return toast.error('Cart is empty')
+            }
+
+            const token = await getToken()
+            const {data} = await axios.post('/api/order/create', {
+                address: selectedAddress._id,
+                items : cartItemsArray
+            }, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
+
+            if (data.success) {
+                toast.success(data.message)
+                setCartItems({})
+                router.push('/order-placed')
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error:unknown) {
+            console.error("API Error:", error);
+            const errorMessage = error instanceof Error ? error.message : "An unknown internal server error occurred";
+            toast.error(errorMessage)
+        }
     }
 
     useEffect(() => {

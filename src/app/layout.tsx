@@ -5,6 +5,7 @@ import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers } from "./providers";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
       >
         <Providers>
           <AppContextProvider>
+            <Toaster />
             {children}
           </AppContextProvider>
           </Providers>

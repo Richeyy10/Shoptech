@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Product from "../../../../../models/product";
 import { inngest } from "@/config/inngest";
 import User from "../../../../../models/user";
+import { Item } from "@/assets/types";
 
 export async function POST(request:NextRequest) {
     try {
@@ -11,13 +12,13 @@ export async function POST(request:NextRequest) {
 
         if(!address || items.length === 0) {
             return NextResponse.json({success: false, message: 'Invalid data'})
-        } 
+        }
 
         // calculate amount using items
 
-        const amount = await items.reduce(async (acc:any, item:any) => {
+        const amount = await items.reduce(async (acc:any, item:Item) => {
             const product = await Product.findById(item.product)
-            return acc + product.offerPrice * item.quantity
+            return await acc + product.offerPrice * item.quantity
         }, 0)
 
         await inngest.send({

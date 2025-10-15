@@ -7,21 +7,39 @@ import Loading from "@/components/Loading";
 import { assets } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 import { Order, orderDummyData } from "@/assets/types";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { NextResponse } from "next/server";
 
 export default function MyOrders () {
-        const { currency } = useAppContext();
+        const { currency, getToken, user } = useAppContext();
     
         const [orders, setOrders] = useState<Order[]>([]);
         const [loading, setLoading] = useState(true);
     
         const fetchOrders = async () => {
-            setOrders(orderDummyData)
-            setLoading(false);
+            try {
+                const token = await getToken()
+                const {data} = await axios.get('/api/order/list', {headers:{Authorization: `Bearer ${token}`}})
+
+                if(data.success) {
+                    setOrders(data.orders.reverse())
+                    setLoading(false);
+                } else {
+                    toast.error(data.message)
+                }
+            } catch (error:unknown) {
+                console.error("API Error:", error);
+                const errorMessage = error instanceof Error ? error.message : "An unknown internal server error occurred";
+                return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
+            }
         }
     
         useEffect(() => {
-            fetchOrders();
-        }, []);
+            if(user) {
+                fetchOrders();
+            }
+        }, [user]);
         
     return(
         <>
