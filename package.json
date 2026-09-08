@@ -13,7 +13,7 @@
     "autoprefixer": "^10.4.13",
     "axios": "^1.12.2",
     "cloudinary": "^2.7.0",
-    "inngest": "^3.40.3",
+    "inngest": "^3.54.0",
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.1",
     "next": "^15.5.25",
